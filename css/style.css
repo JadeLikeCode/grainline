@@ -87,12 +87,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .lineup__img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .6s ease; }
 .lineup__img img.is-on { opacity: 1; }
 .lineup__label { display: flex; justify-content: space-between; padding: 14px 16px; background: var(--white); }
-.lineup__bar { grid-column: 1 / -1; display: flex; justify-content: space-between; margin-top: 16px; }
+.lineup__bar { grid-column: 1 / -1; display: flex; justify-content: space-between; margin-top: 16px; align-items: center; }
 
 .views { display: flex; gap: 24px; }
 .views button { color: var(--muted); transition: color .3s ease; }
 .views button.is-on { color: var(--ink); font-weight: 400; }
 .views button:hover { color: var(--ink); }
+/* Home: the view switcher as light pills */
+.lineup__bar .views { gap: 8px; }
+.lineup__bar .views button { padding: 6px 14px; border: 1px solid var(--rule); border-radius: 999px; line-height: 1.2;
+  transition: color .3s ease, background-color .3s ease, border-color .3s ease; }
+.lineup__bar .views button:hover { border-color: #C9C3BB; }
+.lineup__bar .views button.is-on { background: #EFEBE5; border-color: #EFEBE5; }
 
 /* ---------- home: from shape to object ---------- */
 .intro__label { grid-column: 1 / 4; padding-top: 14px; }
@@ -233,6 +239,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .viewer { height: 200vh; }
   .viewer__name { font-size: 64px; }
   .viewer__tile .views { bottom: auto; top: 26px; right: 20px; gap: 12px; }
+  /* Phones: the tile is tall and narrow, so show the whole render at a fixed size
+     (chairs fill ~30% of the render's width) instead of cropping it to cover. */
+  .viewer__tile { background: #F6F5F1; }
+  .viewer__tile img { inset: auto; top: 50%; left: 50%; width: 260%; max-width: none; height: auto; object-fit: fill;
+    transform: translate(-50%, -50%) scale(var(--view-scale, 1)); }
   .viewer__meta { display: none; }
   .construction__copy, .construction__tile { grid-column: 1 / -1; }
   .construction__tile { width: 100%; margin-top: 24px; }
