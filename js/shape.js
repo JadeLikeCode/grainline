@@ -5,7 +5,7 @@
      03 Object    the overhead render fades up under the lines, then the lines fade out
    Beats with data-trace are fully drawn: "shard" traces the top view, "totem" the
    front view (the circle is cut on a diagonal, then posts, seat and legs draw in).
-   The line beat is FPO:
+   "float" the back view (one line folds into the frame). Untraced beats stay FPO:
    their steps, progress and counter run, and the stage waits for its trace. */
 (() => {
   const beats = [...document.querySelectorAll("[data-beat]")];
@@ -42,6 +42,7 @@
     }
     return out;
   }
+  const toOpen = pts => "M" + pts.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join("L");
   const toD = pts => "M" + pts.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join("L") + "Z";
 
   const TRACES = {
@@ -99,6 +100,63 @@
   }
   TRACES.totem = totemFront;
 
+  /* ---------- Float, back view ----------
+     Measured on the 2082×1216 back render; the stage shows the 1216×1216 window at x=432,
+     scaled to 1200 (assets/renders/float-back-square.jpg).
+     01: one straight line runs across the stage. 02: it folds at two hinges — the top
+     corners of the frame — and its ends swing down into the back legs. */
+  const TB = { ox: 432, s: 1200 / 1216 };
+  const K = (x, y) => [(x - TB.ox) * TB.s, y * TB.s];
+  function floatBack() {
+    // Each back leg is straight above the seat and kinks slightly outward below it.
+    const oL = [[841, 150], [814, 525], [749, 1035]], iL = [[878, 197], [856, 525], [781, 1035]];
+    const oR = [[1234, 150], [1263, 525], [1330, 1035]], iR = [[1196, 197], [1227, 525], [1299, 1035]];
+    const cl = K(...oL[0]), cr = K(...oR[0]);                           // the two hinges
+    const legDef = leg => {
+      const p = leg.map(q => K(...q));
+      return [[p[0], p[1]], [p[1], p[2]]].map(([u, v]) => ({ len: Math.hypot(v[0] - u[0], v[1] - u[1]), ang: Math.atan2(v[1] - u[1], v[0] - u[0]) }));
+    };
+    const segL = legDef(oL), segR = legDef(oR);
+    const nLeg = Math.round(N * 0.4), nRail = N - 2 * nLeg;
+    // Walk a two-segment leg from its hinge; at m = 0 both segments point straight out.
+    function walk(start, segs, out, m, n) {
+      const total = segs[0].len + segs[1].len, pts = [];
+      const a0 = lerp(out, segs[0].ang, m), a1 = lerp(out, segs[1].ang, m);
+      const knee = [start[0] + segs[0].len * Math.cos(a0), start[1] + segs[0].len * Math.sin(a0)];
+      for (let i = 1; i <= n; i++) {
+        const d = total * i / n;
+        pts.push(d <= segs[0].len ? [start[0] + d * Math.cos(a0), start[1] + d * Math.sin(a0)]
+                                  : [knee[0] + (d - segs[0].len) * Math.cos(a1), knee[1] + (d - segs[0].len) * Math.sin(a1)]);
+      }
+      return pts;
+    }
+    // m = 0: one flat line (legs point straight out); m = 1: legs folded down to the floor.
+    function at(m) {
+      const left = walk(cl, segL, Math.PI, m, nLeg).reverse();
+      const rail = Array.from({ length: nRail }, (_, i) => [lerp(cl[0], cr[0], i / (nRail - 1)), cl[1]]);
+      return [...left, ...rail, ...walk(cr, segR, 0, m, nLeg)];
+    }
+    const path = pts => "M" + pts.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join("L");
+    const L = (...pts) => path(pts.map(p => K(...p)));
+    const Q = (a, c, b) => { const [A, C, B] = [K(...a), K(...c), K(...b)]; return `M${A.join(" ")} Q${C.join(" ")} ${B.join(" ")}`; };
+    const parts = [
+      // frame: inner edge, leg ends, and the two joints where the rail meets the posts
+      L(iL[2], iL[1], iL[0], iR[0], iR[1], iR[2]),
+      Q(oL[2], [765, 1050], iL[2]) + " " + Q(iR[2], [1314, 1050], oR[2]) +
+        " " + L([876, 150], [877, 197]) + " " + L([1198, 150], [1197, 197]),
+      // seat: between the posts, then the two ends that show outside them
+      L([861, 463], [1217, 463]) + " " + L([858, 518], [1226, 518]) + " " + L([854, 556], [1228, 556]),
+      L([817, 464], [806, 467]) + " " + Q([806, 467], [796, 470], [796, 481]) + " " + L([796, 481], [796, 538]) + " " + Q([796, 538], [797, 549], [810, 550]) + " " + L([796, 518], [814, 518]) +
+        " " + L([1262, 464], [1272, 467]) + " " + Q([1272, 467], [1281, 470], [1281, 481]) + " " + L([1281, 481], [1281, 538]) + " " + Q([1281, 538], [1279, 549], [1266, 550]) + " " + L([1263, 518], [1281, 518]),
+      // front legs (oak), under the seat
+      L([854, 557], [814, 940]) + " " + Q([814, 940], [827, 958], [840, 940]) + " " + L([840, 940], [883, 557]),
+      L([1192, 557], [1237, 940]) + " " + Q([1237, 940], [1250, 958], [1262, 940]) + " " + L([1262, 940], [1222, 557])
+    ];
+    // the line work waits until the fold has mostly landed
+    return { kind: "front", shape: at(0), target: at(1), at, parts, partsStart: 0.42, partsStep: 0.025, partsDur: 0.12 };
+  }
+  TRACES.float = floatBack;
+
   function el(tag, attrs = {}, parent) {
     const n = document.createElementNS(NS, tag);
     for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
@@ -109,10 +167,11 @@
   /* Front-view trace: one shape that morphs, then open line work that draws in. */
   function buildFront(stage, g) {
     const svg = el("svg", { viewBox: "0 0 1200 1200", fill: "none", "aria-hidden": "true" }, stage);
-    const ghost = el("path", { d: toD(g.shape), stroke: "#161412", "stroke-opacity": 0, "stroke-width": 1.5, "stroke-dasharray": "6 8" }, svg);
+    const D = g.at ? toOpen : toD;
+    const ghost = el("path", { d: D(g.shape), stroke: "#161412", "stroke-opacity": 0, "stroke-width": 1.5, "stroke-dasharray": "6 8" }, svg);
     const parts = g.parts.map(d => el("path", { d, stroke: "#161412", "stroke-width": 2, "stroke-linecap": "round", "stroke-linejoin": "round",
       pathLength: 1, "stroke-dasharray": 1, "stroke-dashoffset": 1 }, svg));
-    const shape = el("path", { d: toD(g.shape), stroke: "#161412", "stroke-width": 2, "stroke-linejoin": "round", pathLength: 1, "stroke-dasharray": 1, "stroke-dashoffset": 1 }, svg);
+    const shape = el("path", { d: D(g.shape), stroke: "#161412", "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round", pathLength: 1, "stroke-dasharray": 1, "stroke-dashoffset": 1 }, svg);
     return { svg, ghost, parts, shape, g };
   }
 
@@ -148,10 +207,10 @@
     const g = TRACES[key]();
     const fig = () => { const f = document.createElement("figure"); holder.appendChild(f); return f; };
     const s1 = el("svg", { viewBox: "0 0 1200 1200", fill: "none" }, fig());
-    el("path", { d: toD(g.shape), stroke: "#161412", "stroke-width": 3 }, s1);
+    el("path", { d: (g.at ? toOpen : toD)(g.shape), stroke: "#161412", "stroke-width": 3 }, s1);
     const s2 = el("svg", { viewBox: "0 0 1200 1200", fill: "none" }, fig());
     if (g.kind === "front") {
-      el("path", { d: toD(g.target), stroke: "#161412", "stroke-width": 3 }, s2);
+      el("path", { d: (g.at ? toOpen : toD)(g.target), stroke: "#161412", "stroke-width": 3 }, s2);
       g.parts.forEach(d => el("path", { d, stroke: "#161412", "stroke-width": 3, "stroke-linecap": "round" }, s2));
     } else {
       el("path", { d: toD(g.seat), stroke: "#161412", "stroke-width": 3 }, s2);
@@ -188,11 +247,12 @@
           photo = seg(p, 0.58, 0.76), out = seg(p, 0.76, 0.88), ghost = seg(p, 0.26, 0.36);
     if (t.g.kind === "front") {
       // 01 the circle draws · 02 it is cut on the diagonal, then posts, seat and legs draw in, top to bottom
-      const pts = morph > 0 ? t.g.shape.map((a, i) => [lerp(a[0], t.g.target[i][0], morph), lerp(a[1], t.g.target[i][1], morph)]) : t.g.shape;
-      t.shape.setAttribute("d", toD(pts));
+      const pts = t.g.at ? t.g.at(morph) : morph > 0 ? t.g.shape.map((a, i) => [lerp(a[0], t.g.target[i][0], morph), lerp(a[1], t.g.target[i][1], morph)]) : t.g.shape;
+      t.shape.setAttribute("d", t.g.at ? toOpen(pts) : toD(pts));
       t.shape.style.strokeDashoffset = morph > 0 ? 0 : 1 - draw;
       const n = t.parts.length;
-      t.parts.forEach((el, k) => { el.style.strokeDashoffset = 1 - seg(p, 0.34 + k * 0.035, 0.34 + k * 0.035 + 0.14); });
+      const p0 = t.g.partsStart || 0.34, dk = t.g.partsStep || 0.035, dur = t.g.partsDur || 0.14;
+      t.parts.forEach((el, k) => { el.style.strokeDashoffset = 1 - seg(p, p0 + k * dk, p0 + k * dk + dur); });
       t.ghost.setAttribute("stroke-opacity", (0.18 * ghost * (1 - photo)).toFixed(3));
       if (s.photo) s.photo.style.opacity = photo;
       t.svg.style.opacity = 1 - out;
