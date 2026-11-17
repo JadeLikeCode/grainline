@@ -237,7 +237,8 @@
 
   function render(s, p) {
     const step = p < 0.26 ? 0 : p < 0.58 ? 1 : 2;
-    s.steps.forEach((li, k) => li.classList.toggle("is-on", k === step));
+    // steps open in turn and stay open; scrolling back up closes them in reverse
+    s.steps.forEach((li, k) => li.classList.toggle("is-on", k <= step));
     if (s.counter) s.counter.textContent = `0${step + 1} / 03`;
     if (s.bar) s.bar.style.width = (p * 100).toFixed(1) + "%";
     if (!s.trace) return;
