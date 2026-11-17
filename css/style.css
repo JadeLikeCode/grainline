@@ -334,3 +334,6 @@ html.rv :is(.display, .viewer__name) .line > span { display: inline-block; trans
 html.rv :is(.display, .viewer__name) .line:nth-child(2) > span { transition-delay: calc(var(--rv-delay, 0ms) + 90ms); }
 html.rv :is(.display, .viewer__name) .line:first-child > span { transition-delay: var(--rv-delay, 0ms); }
 html.rv :is(.display, .viewer__name).is-in .line > span { transform: none; }
+
+/* Arriving on a page with a #section: land below the sticky nav. */
+html { scroll-padding-top: 72px; }
