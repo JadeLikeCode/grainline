@@ -3,7 +3,9 @@
      01 Shape     the source shape draws itself
      02 Top view  it morphs into the chair's traced top view; back and legs draw in
      03 Object    the overhead render fades up under the lines, then the lines fade out
-   Beats with data-trace="shard" are fully drawn. The circle and line beats are FPO:
+   Beats with data-trace are fully drawn: "shard" traces the top view, "totem" the
+   front view (the circle is cut on a diagonal, then posts, seat and legs draw in).
+   The line beat is FPO:
    their steps, progress and counter run, and the stage waits for its trace. */
 (() => {
   const beats = [...document.querySelectorAll("[data-beat]")];
@@ -56,6 +58,47 @@
     }
   };
 
+  /* ---------- Totem, front view ----------
+     Measured on the 1448×1086 front render; the stage shows the 1086×1086 window at x=173,
+     scaled to 1200 (assets/renders/totem-front-square.jpg). */
+  const TF = { ox: 173, s: 1200 / 1086 };
+  const F = (x, y) => [(x - TF.ox) * TF.s, y * TF.s];
+  function totemFront() {
+    const C = F(717.2, 275.3), R = 214.4 * TF.s;
+    const A = F(512.2, 212.5), B = F(859.3, 435.8);              // ends of the diagonal cut
+    const a0 = Math.atan2(A[1] - C[1], A[0] - C[0]);
+    let a1 = Math.atan2(B[1] - C[1], B[0] - C[0]); while (a1 <= a0) a1 += 2 * Math.PI;
+    const span = (a1 - a0) / (2 * Math.PI);                     // share of the circle that stays round
+    // The circle, drawn clockwise from A. Its target: the same arc, then the cut points
+    // slide onto the chord from B back to A — the circle is sliced into the half-disc.
+    const shape = [], target = [];
+    for (let i = 0; i < N; i++) {
+      const f = i / (N - 1), a = a0 + f * 2 * Math.PI;
+      const p = [C[0] + R * Math.cos(a), C[1] + R * Math.sin(a)];
+      shape.push(p);
+      if (f <= span) target.push(p);
+      else { const t = (f - span) / (1 - span); target.push([lerp(B[0], A[0], t), lerp(B[1], A[1], t)]); }
+    }
+    const chordY = x => (x - 181.9) / 1.554;                    // the cut, as measured
+    const path = pts => "M" + pts.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join("L");
+    const seg2 = (a, b) => path([F(...a), F(...b)]);
+    const capLeg = (l0, r0, l1, r1, tip) => path([F(...l0), F(...l1)]) + " M" + F(...l1).join(" ") +
+      ` Q${F(...tip).join(" ")} ${F(...r1).join(" ")} L${F(...r0).join(" ")}`;
+    const parts = [
+      // posts, from the cut down to the seat
+      seg2([567, chordY(567)], [555, 490]) + " " + seg2([605, chordY(605)], [596, 490]),
+      seg2([838, chordY(838)], [840, 490]) + " " + seg2([881, 414], [882, 490]),
+      // seat: top face, front edge
+      path([F(554, 490), F(882, 490), F(935, 562), F(930, 582), F(909, 600), F(527, 600), F(507, 582), F(502, 562), F(554, 490)]) +
+        " " + seg2([502, 562], [935, 562]),
+      // legs, below the seat
+      capLeg([541, 602], [591, 602], [497, 1000], [523, 1000], [509, 1014]),
+      capLeg([846, 602], [897, 602], [913, 1000], [940, 1000], [927, 1014])
+    ];
+    return { kind: "front", shape, target, parts };
+  }
+  TRACES.totem = totemFront;
+
   function el(tag, attrs = {}, parent) {
     const n = document.createElementNS(NS, tag);
     for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
@@ -63,9 +106,20 @@
     return n;
   }
 
+  /* Front-view trace: one shape that morphs, then open line work that draws in. */
+  function buildFront(stage, g) {
+    const svg = el("svg", { viewBox: "0 0 1200 1200", fill: "none", "aria-hidden": "true" }, stage);
+    const ghost = el("path", { d: toD(g.shape), stroke: "#161412", "stroke-opacity": 0, "stroke-width": 1.5, "stroke-dasharray": "6 8" }, svg);
+    const parts = g.parts.map(d => el("path", { d, stroke: "#161412", "stroke-width": 2, "stroke-linecap": "round", "stroke-linejoin": "round",
+      pathLength: 1, "stroke-dasharray": 1, "stroke-dashoffset": 1 }, svg));
+    const shape = el("path", { d: toD(g.shape), stroke: "#161412", "stroke-width": 2, "stroke-linejoin": "round", pathLength: 1, "stroke-dasharray": 1, "stroke-dashoffset": 1 }, svg);
+    return { svg, ghost, parts, shape, g };
+  }
+
   /* Build the line drawing inside a stage. Returns the parts to animate. */
   function buildTrace(stage, key, id) {
     const g = TRACES[key]();
+    if (g.kind === "front") return buildFront(stage, g);
     const svg = el("svg", { viewBox: "0 0 1200 1200", fill: "none", "aria-hidden": "true" }, stage);
     const defs = el("defs", {}, svg);
     const mask = el("mask", { id: "m-" + id, maskUnits: "userSpaceOnUse", x: 0, y: 0, width: 1200, height: 1200 }, defs);
@@ -96,8 +150,13 @@
     const s1 = el("svg", { viewBox: "0 0 1200 1200", fill: "none" }, fig());
     el("path", { d: toD(g.shape), stroke: "#161412", "stroke-width": 3 }, s1);
     const s2 = el("svg", { viewBox: "0 0 1200 1200", fill: "none" }, fig());
-    el("path", { d: toD(g.seat), stroke: "#161412", "stroke-width": 3 }, s2);
-    el("path", { d: toD(g.back), stroke: "#161412", "stroke-width": 3 }, s2);
+    if (g.kind === "front") {
+      el("path", { d: toD(g.target), stroke: "#161412", "stroke-width": 3 }, s2);
+      g.parts.forEach(d => el("path", { d, stroke: "#161412", "stroke-width": 3, "stroke-linecap": "round" }, s2));
+    } else {
+      el("path", { d: toD(g.seat), stroke: "#161412", "stroke-width": 3 }, s2);
+      el("path", { d: toD(g.back), stroke: "#161412", "stroke-width": 3 }, s2);
+    }
     const img = document.createElement("img"); img.src = photo; img.alt = ""; fig().appendChild(img);
   }
 
@@ -127,6 +186,18 @@
     const t = s.trace;
     const draw = seg(p, 0.02, 0.20), morph = seg(p, 0.26, 0.46), parts = seg(p, 0.30, 0.50),
           photo = seg(p, 0.58, 0.76), out = seg(p, 0.76, 0.88), ghost = seg(p, 0.26, 0.36);
+    if (t.g.kind === "front") {
+      // 01 the circle draws · 02 it is cut on the diagonal, then posts, seat and legs draw in, top to bottom
+      const pts = morph > 0 ? t.g.shape.map((a, i) => [lerp(a[0], t.g.target[i][0], morph), lerp(a[1], t.g.target[i][1], morph)]) : t.g.shape;
+      t.shape.setAttribute("d", toD(pts));
+      t.shape.style.strokeDashoffset = morph > 0 ? 0 : 1 - draw;
+      const n = t.parts.length;
+      t.parts.forEach((el, k) => { el.style.strokeDashoffset = 1 - seg(p, 0.34 + k * 0.035, 0.34 + k * 0.035 + 0.14); });
+      t.ghost.setAttribute("stroke-opacity", (0.18 * ghost * (1 - photo)).toFixed(3));
+      if (s.photo) s.photo.style.opacity = photo;
+      t.svg.style.opacity = 1 - out;
+      return;
+    }
     const pts = morph > 0 ? t.g.shape.map((a, i) => [lerp(a[0], t.g.seat[i][0], morph), lerp(a[1], t.g.seat[i][1], morph)]) : t.g.shape;
     t.shape.setAttribute("d", toD(pts));
     t.shape.style.strokeDashoffset = morph > 0 ? 0 : 1 - draw;
