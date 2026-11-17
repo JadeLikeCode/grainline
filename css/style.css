@@ -168,19 +168,25 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .person__img { grid-column: 1 / 8; aspect-ratio: 4 / 5; object-fit: cover; width: 100%; background: var(--cream); }
 .person__text { grid-column: 9 / 13; align-self: end; display: flex; flex-direction: column; gap: 20px; }
 
-/* Construction: the section pins while the parts travel into place. */
+/* Construction: the section pins while the parts travel into place.
+   Copy in columns 1–4, the chair in a 4:3 tile across columns 5–12. */
 .construction { height: 240vh; margin-top: var(--section); }
-.construction__stick { position: sticky; top: 76px; height: calc(100vh - 76px); align-content: center; }
-.construction__label { grid-column: 1 / -1; margin-bottom: 20px; }
-.construction__tile { grid-column: 1 / -1; justify-self: center; position: relative; aspect-ratio: 16 / 9;
-  width: min(100%, calc((100vh - 76px - 120px) * 16 / 9)); background: #F7F6F2; overflow: hidden; }
-.construction__tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.construction__tile img.piece { inset: auto; object-fit: fill; transform-origin: 0 0; will-change: transform; }
-.construction__tile .assembled { opacity: 0; z-index: 10; }
-.section--tight { padding-top: 40px; }
-.parts { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); column-gap: var(--g); margin-top: 20px; }
-.parts div { border-top: 1px solid var(--rule); padding-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+.construction__stick { position: sticky; top: 76px; height: calc(100vh - 76px); align-content: center; align-items: start; }
+.construction__copy { grid-column: 1 / span 4; }
+.construction__label { margin-bottom: 24px; }
+.construction__tile { grid-column: 5 / -1; position: relative; aspect-ratio: 4 / 3;
+  width: min(100%, calc((100vh - 76px - 80px) * 4 / 3)); background: #F7F6F2; overflow: hidden; }
+/* The 16:9 render frame, centred in the tile; the empty sides fall outside the crop. */
+.construction__frame { position: absolute; top: 0; left: 50%; height: 100%; aspect-ratio: 16 / 9; transform: translateX(-50%); }
+.construction__frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.construction__frame img.piece { inset: auto; object-fit: fill; transform-origin: 0 0; will-change: transform; }
+.construction__frame .assembled { opacity: 0; z-index: 10; }
+.parts { display: flex; flex-direction: column; gap: 8px; }
+.parts > div { border-top: 1px solid var(--rule); padding-top: 16px; padding-bottom: 8px; display: flex; flex-direction: column; gap: 8px; }
 .parts p { color: var(--muted); max-width: 360px; }
+/* Each part name starts grey and turns ink as its piece lands. */
+.parts .strong { color: var(--muted); transition: color .5s ease; }
+.parts > .is-set .strong { color: var(--ink); }
 
 .drawing__label { grid-column: 1 / -1; margin-bottom: 20px; }
 .drawing__tile { grid-column: 1 / 9; aspect-ratio: 4 / 3; background: var(--cream); display: flex; align-items: center; justify-content: center; }
@@ -228,7 +234,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .viewer__name { font-size: 64px; }
   .viewer__tile .views { bottom: auto; top: 26px; right: 20px; gap: 12px; }
   .viewer__meta { display: none; }
-  .parts { grid-template-columns: 1fr; row-gap: 20px; }
+  .construction__copy, .construction__tile { grid-column: 1 / -1; }
+  .construction__tile { width: 100%; margin-top: 24px; }
+  .parts > div { padding-top: 10px; padding-bottom: 2px; gap: 4px; }
   .compare__item { margin-bottom: 32px; }
   .values li { flex-direction: column; align-items: flex-start; gap: 8px; }
   .footer > * { grid-column: 1 / -1 !important; justify-self: start !important; margin-bottom: 6px; }
@@ -249,8 +257,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .viewer__stick { position: static; height: 80vh; }
   .construction { height: auto; }
   .construction__stick { position: static; height: auto; }
-  .construction__tile .exploded, .construction__tile .piece { display: none; }
-  .construction__tile .assembled { opacity: 1; }
+  .construction__frame .exploded, .construction__frame .piece { display: none; }
+  .construction__frame .assembled { opacity: 1; }
+  .parts .strong { color: var(--ink); }
 }
 
 
