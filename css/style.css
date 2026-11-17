@@ -299,3 +299,38 @@ body.menu-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .menu__panel { transform: none; }
 }
+
+/* ---------- motion: reveal on load and scroll (js/reveal.js) ---------- */
+:root { --rv-ease: cubic-bezier(.2, .7, .2, 1); }
+html.rv .nav > * { animation: rv-fade .9s var(--rv-ease) both; }
+html.rv .nav > :nth-child(2) { animation-delay: 60ms; }
+html.rv .nav > :nth-child(3) { animation-delay: 120ms; }
+html.rv .nav > :nth-child(4) { animation-delay: 180ms; }
+html.rv .nav > :nth-child(5) { animation-delay: 240ms; }
+@keyframes rv-fade { from { opacity: 0; } }
+
+html.rv :is(.viewer__meta, .viewer__tile .views, .hero__meta > *, .lineup__chair, .lineup__bar,
+  .intro__label, .intro__text, .studio__label, .studio__text, .values li, .closing .link,
+  .statement-row .statement, .statement-row .body, .person__img, .person__text > *,
+  .construction__label, .parts > div, .drawing__label, .drawing__tile, .specs,
+  .compare__label, .compare__item, .footer > :not(.footer__rule)) {
+  opacity: 0; transform: translateY(14px);
+  transition: opacity .9s var(--rv-ease), transform 1.1s var(--rv-ease);
+  transition-delay: var(--rv-delay, 0ms);
+}
+html.rv .is-in { opacity: 1 !important; transform: none !important; }
+
+/* Full-bleed photos: fade in and settle from a touch of scale. */
+.bleed { overflow: hidden; }
+html.rv .bleed { opacity: 0; transition: opacity 1.2s var(--rv-ease); transition-delay: var(--rv-delay, 0ms); }
+html.rv .bleed img { transform: scale(1.04); transition: transform 1.8s var(--rv-ease); transition-delay: var(--rv-delay, 0ms); }
+html.rv .bleed.is-in img { transform: none; }
+
+/* Display type rises line by line from behind a mask. */
+html.rv :is(.display, .viewer__name):not(.is-split) { opacity: 0; }
+.display .line, .viewer__name .line { display: block; overflow: hidden; padding-bottom: .06em; margin-bottom: -.06em; }
+html.rv :is(.display, .viewer__name) .line > span { display: inline-block; transform: translateY(105%);
+  transition: transform 1.1s var(--rv-ease); }
+html.rv :is(.display, .viewer__name) .line:nth-child(2) > span { transition-delay: calc(var(--rv-delay, 0ms) + 90ms); }
+html.rv :is(.display, .viewer__name) .line:first-child > span { transition-delay: var(--rv-delay, 0ms); }
+html.rv :is(.display, .viewer__name).is-in .line > span { transform: none; }
