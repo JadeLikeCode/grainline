@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grainline — Made to be seen. Built to be used.</title>
+<meta name="description" content="Grainline: sculptural chairs in walnut and oak, drawn from a circle, a triangle and a line.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Hanken+Grotesk:wght@200;300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=13">
+</head>
+<body>
+<header class="nav grid">
+  <a class="nav__logo" href="index.html" aria-label="Grainline — home"><img src="assets/logo.svg" alt="Grainline"></a>
+  <a data-col="7" href="index.html#collection" data-menu-open aria-haspopup="true" aria-expanded="false">Collection</a>
+  <a data-col="8" href="index.html#process">Process</a>
+  <a data-col="9" href="index.html#studio">Studio</a>
+  <a data-col="12" href="#contact">Contact</a>
+</header>
+<div class="menu" data-menu aria-hidden="true">
+  <div class="menu__scrim" data-menu-close></div>
+  <div class="menu__panel" role="dialog" aria-label="The collection">
+    <div class="menu__head grid">
+      <span class="muted">Collection 01 — 2026</span>
+      <span class="muted">Three chairs, three shapes</span>
+      <button type="button" data-menu-close>Close ×</button>
+    </div>
+    <div class="menu__chairs grid">
+      <a class="menu__chair" href="totem.html"><div class="img"><img src="assets/renders/totem-three-quarter.jpg" alt="Totem"></div><div class="meta"><span class="name">Totem</span><span class="link">View Totem →</span></div><span class="muted">Circle</span></a>
+      <a class="menu__chair" href="shard.html"><div class="img"><img src="assets/renders/shard-three-quarter.jpg" alt="Shard"></div><div class="meta"><span class="name">Shard</span><span class="link">View Shard →</span></div><span class="muted">Triangle</span></a>
+      <a class="menu__chair" href="float.html"><div class="img"><img src="assets/renders/float-three-quarter.jpg" alt="Float"></div><div class="meta"><span class="name">Float</span><span class="link">View Float →</span></div><span class="muted">Line</span></a>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="hero grid">
+    <h1 class="display">Made to be seen.<br>Built to be used.</h1>
+    <div class="hero__meta">
+      <span class="muted">Grainline — Collection 01, 2026</span>
+      <span>Sculptural furniture in solid walnut and oak.</span>
+    </div>
+  </section>
+
+  <section class="lineup grid" id="collection" data-lineup>
+    <div class="lineup__band">
+      <a class="lineup__chair" href="totem.html">
+        <div class="lineup__img"><img src="assets/renders/totem-three-quarter.jpg" alt="Totem, three-quarter view" class="is-on" loading="eager"><img src="assets/renders/totem-side.jpg" alt="Totem, side view" loading="lazy"><img src="assets/renders/totem-back.jpg" alt="Totem, back view" loading="lazy"><img src="assets/renders/totem-top.jpg" alt="Totem, top view" loading="lazy"></div>
+        <div class="lineup__label"><span class="strong">Totem</span><span class="lineup__shape muted">Circle</span></div>
+      </a>
+      <a class="lineup__chair" href="shard.html">
+        <div class="lineup__img"><img src="assets/renders/shard-three-quarter.jpg" alt="Shard, three-quarter view" class="is-on" loading="eager"><img src="assets/renders/shard-side.jpg" alt="Shard, side view" loading="lazy"><img src="assets/renders/shard-back.jpg" alt="Shard, back view" loading="lazy"><img src="assets/renders/shard-top.jpg" alt="Shard, top view" loading="lazy"></div>
+        <div class="lineup__label"><span class="strong">Shard</span><span class="lineup__shape muted">Triangle</span></div>
+      </a>
+      <a class="lineup__chair" href="float.html">
+        <div class="lineup__img"><img src="assets/renders/float-three-quarter.jpg" alt="Float, three-quarter view" class="is-on" loading="eager"><img src="assets/renders/float-side.jpg" alt="Float, side view" loading="lazy"><img src="assets/renders/float-back.jpg" alt="Float, back view" loading="lazy"><img src="assets/renders/float-top.jpg" alt="Float, top view" loading="lazy"></div>
+        <div class="lineup__label"><span class="strong">Float</span><span class="lineup__shape muted">Line</span></div>
+      </a>
+    </div>
+    <div class="lineup__bar">
+      <span class="muted">Collection 01 — 2026</span>
+      <div class="views" aria-label="Choose a view"><button type="button" class="is-on">Three-quarter</button><button type="button">Side</button><button type="button">Back</button><button type="button">Top</button></div>
+    </div>
+  </section>
+
+  <section class="section grid" id="process">
+    <div class="intro__label">From shape to object</div>
+    <p class="intro__text statement">Every piece begins with a single shape. We draw from geometry, then give it warmth, weight and use.</p>
+  </section>
+
+  <section class="beat beat--right" data-beat>
+    <div class="beat__stick grid">
+      <div class="beat__copy">
+        <div class="word">Circle.</div>
+        <ol class="steps"><li><span>01</span><b>Shape</b><span class="desc">It starts as one form — a circle.</span></li><li><span>02</span><b>Top view</b><span class="desc">The circle becomes a backrest; a seat and legs follow.</span></li><li><span>03</span><b>Object</b><span class="desc">Totem — walnut and oak.</span></li></ol>
+        <a class="link" href="totem.html">Explore Totem →</a>
+      </div>
+      <div class="beat__stage">
+        <div class="stage" role="img" aria-label="Totem drawn from a circle"><div class="stage__fpo"><b>FPO</b><span>Circle → Totem top view → render</span></div></div>
+        <div class="progress"><i></i></div>
+        <div class="counter">01 / 03</div>
+      </div>
+      <div class="beat__static"></div>
+    </div>
+  </section>
+
+  <section class="beat beat--left" data-beat>
+    <div class="beat__stick grid">
+      <div class="beat__stage">
+        <div class="stage" data-trace="shard" role="img" aria-label="Shard drawn from a triangle"><img src="assets/renders/shard-top-square.jpg" alt="Shard, seen from above"></div>
+        <div class="progress"><i></i></div>
+        <div class="counter">01 / 03</div>
+      </div>
+      <div class="beat__copy">
+        <div class="word">Triangle.</div>
+        <ol class="steps"><li><span>01</span><b>Shape</b><span class="desc">It starts as one form — a triangle.</span></li><li><span>02</span><b>Top view</b><span class="desc">The triangle becomes a seat; a back and three legs follow.</span></li><li><span>03</span><b>Object</b><span class="desc">Shard — walnut and oak.</span></li></ol>
+        <a class="link" href="shard.html">Explore Shard →</a>
+      </div>
+      <div class="beat__static"></div>
+    </div>
+  </section>
+
+  <section class="beat beat--right" data-beat>
+    <div class="beat__stick grid">
+      <div class="beat__copy">
+        <div class="word">Line.</div>
+        <ol class="steps"><li><span>01</span><b>Shape</b><span class="desc">It starts as one form — a line.</span></li><li><span>02</span><b>Top view</b><span class="desc">The line becomes a frame; a seat floats within it.</span></li><li><span>03</span><b>Object</b><span class="desc">Float — walnut and oak.</span></li></ol>
+        <a class="link" href="float.html">Explore Float →</a>
+      </div>
+      <div class="beat__stage">
+        <div class="stage" role="img" aria-label="Float drawn from a line"><div class="stage__fpo"><b>FPO</b><span>Line → Float top view → render</span></div></div>
+        <div class="progress"><i></i></div>
+        <div class="counter">01 / 03</div>
+      </div>
+      <div class="beat__static"></div>
+    </div>
+  </section>
+
+  <figure class="bleed"><img src="assets/lifestyle/float-desk.jpg" alt="Float at a desk in a sunlit room" loading="lazy"></figure>
+
+  <section class="section grid" id="studio">
+    <div class="studio__label">Studio</div>
+    <p class="studio__text statement">Grainline is a small furniture studio working the line between design and art.</p>
+    <ul class="values">
+      <li><span>Clarity</span><span>Geometry distilled to its essentials — simple forms, honest craft, precise joinery.</span></li>
+      <li><span>Sculpture</span><span>Every piece is both functional and artful, designed to spark conversation.</span></li>
+      <li><span>Warmth</span><span>Minimal doesn’t mean cold. Warm woods, tactile finishes, human scale.</span></li>
+    </ul>
+  </section>
+
+  <section class="closing grid">
+    <h2 class="display">Fewer pieces,<br>better made.</h2>
+    <a class="link" href="#contact">Enquire about a piece →</a>
+  </section>
+</main>
+<footer class="footer grid" id="contact">
+  <div class="footer__rule"></div>
+  <span class="muted">© 2026 Grainline</span>
+  <span class="muted">Sculptural furniture</span>
+  <a href="#">Instagram</a>
+  <a href="#">Contact</a>
+</footer>
+<script src="js/menu.js?v=13" defer></script>
+<script src="js/lineup.js?v=13" defer></script>
+<script src="js/shape.js?v=13" defer></script>
+</body>
+</html>

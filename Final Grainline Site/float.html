@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Float — Grainline</title>
+<meta name="description" content="Float: An open frame, a grounded seat, and just enough structure. A Grainline chair in walnut and oak.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Hanken+Grotesk:wght@200;300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=13">
+</head>
+<body>
+<header class="nav grid">
+  <a class="nav__logo" href="index.html" aria-label="Grainline — home"><img src="assets/logo.svg" alt="Grainline"></a>
+  <a data-col="7" href="index.html#collection" data-menu-open aria-haspopup="true" aria-expanded="false">Collection</a>
+  <a data-col="8" href="index.html#process">Process</a>
+  <a data-col="9" href="index.html#studio">Studio</a>
+  <a data-col="12" href="#contact">Contact</a>
+</header>
+<div class="menu" data-menu aria-hidden="true">
+  <div class="menu__scrim" data-menu-close></div>
+  <div class="menu__panel" role="dialog" aria-label="The collection">
+    <div class="menu__head grid">
+      <span class="muted">Collection 01 — 2026</span>
+      <span class="muted">Three chairs, three shapes</span>
+      <button type="button" data-menu-close>Close ×</button>
+    </div>
+    <div class="menu__chairs grid">
+      <a class="menu__chair" href="totem.html"><div class="img"><img src="assets/renders/totem-three-quarter.jpg" alt="Totem"></div><div class="meta"><span class="name">Totem</span><span class="link">View Totem →</span></div><span class="muted">Circle</span></a>
+      <a class="menu__chair" href="shard.html"><div class="img"><img src="assets/renders/shard-three-quarter.jpg" alt="Shard"></div><div class="meta"><span class="name">Shard</span><span class="link">View Shard →</span></div><span class="muted">Triangle</span></a>
+      <a class="menu__chair" href="float.html"><div class="img"><img src="assets/renders/float-three-quarter.jpg" alt="Float"></div><div class="meta"><span class="name">Float</span><span class="link">View Float →</span></div><span class="muted">Line</span></a>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="viewer" data-viewer>
+    <div class="viewer__stick">
+      <div class="viewer__tile">
+        <img src="assets/renders/float-three-quarter.jpg" alt="Float, three-quarter view" class="is-on"><img src="assets/renders/float-side.jpg" alt="Float, side view"><img src="assets/renders/float-back.jpg" alt="Float, back view"><img src="assets/renders/float-top.jpg" alt="Float, top view">
+        <span class="viewer__meta">Chair — walnut, oak</span>
+        <h1 class="viewer__name">Float</h1>
+        <div class="views" aria-label="Choose a view"><button type="button" class="is-on">Three-quarter</button><button type="button">Side</button><button type="button">Back</button><button type="button">Top</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="statement-row section grid">
+    <p class="statement">An open frame, a grounded seat, and just enough structure.</p>
+    <p class="body">Float reduces the chair to a single drawn line of walnut around a softly rounded oak seat — light enough to disappear into a room, precise enough to hold it.</p>
+  </section>
+
+  <section class="section grid">
+    <img class="person__img" style="object-position:59% 50%" src="assets/lifestyle/float-seated.jpg" alt="A person seated on Float" loading="lazy">
+    <div class="person__text">
+      <span>The body</span>
+      <h2 class="headline">Seat at 450 mm.</h2>
+      <p class="body">The seat height sets the posture. The open walnut frame gives the back somewhere to rest without closing it in — light enough to pull up to the table, steady enough to stay.</p>
+    </div>
+  </section>
+
+  <section class="construction" data-construction>
+    <div class="construction__stick grid">
+      <div class="construction__label">Construction</div>
+      <div class="construction__tile" role="img" aria-label="Float assembling from its parts as you scroll">
+        <img class="exploded" src="assets/renders/float-exploded.jpg" alt="">
+        <img class="piece" src="assets/parts/float-0.png?v=13" alt="" data-dx="0.834" data-dy="1.992" data-sx="0.9345" data-sy="0.9345" style="left:37.031%;top:9.167%;width:34.375%;height:69.236%;z-index:3"><img class="piece" src="assets/parts/float-1.png?v=13" alt="" data-dx="1.213" data-dy="-5.798" data-sx="1.0862" data-sy="1.0862" style="left:35.078%;top:47.986%;width:4.258%;height:32.431%;z-index:1"><img class="piece" src="assets/parts/float-2.png?v=13" alt="" data-dx="0.288" data-dy="-6.784" data-sx="1.0304" data-sy="1.0304" style="left:50.391%;top:51.528%;width:3.75%;height:37.222%;z-index:1"><img class="piece" src="assets/parts/float-3.png?v=13" alt="" data-dx="0.417" data-dy="2.5" data-sx="0.86" data-sy="0.94" style="left:37.031%;top:9.167%;width:34.375%;height:69.236%;z-index:2">
+        <img class="assembled" src="assets/renders/float-three-quarter.jpg" alt="">
+      </div>
+    </div>
+  </section>
+  <section class="section section--tight grid">
+    <div class="parts"><div><span class="strong">Frame</span><p>Solid walnut. Back and rear legs drawn as one continuous line.</p></div><div><span class="strong">Seat</span><p>Oak, softly rounded at every edge.</p></div><div><span class="strong">Front legs</span><p>Oak, tapered toward the floor.</p></div></div>
+  </section>
+
+  <figure class="bleed"><img src="assets/lifestyle/float-desk.jpg" alt="Float at a desk in a sunlit room" loading="lazy"></figure>
+
+  <section class="section grid">
+    <div class="drawing__label">Drawing</div>
+    <div class="drawing__tile"><img src="assets/drawings/float.svg" alt="Float front elevation with dimensions"></div>
+    <div class="specs">
+      <div class="specs__big">790</div>
+      <div class="specs__unit muted">mm — overall height</div>
+      <dl><div><dt>Height</dt><dd>790 mm</dd></div><div><dt>Seat height</dt><dd>450 mm</dd></div><div><dt>Width</dt><dd>480 mm</dd></div><div><dt>Depth</dt><dd>—</dd></div><div><dt>Frame</dt><dd>Solid walnut</dd></div><div><dt>Seat</dt><dd>Oak</dd></div><div><dt>Finish</dt><dd>Natural oil</dd></div></dl>
+      <a class="link" href="#contact">Enquire</a>
+    </div>
+  </section>
+
+  <section class="section grid">
+    <div class="compare__label">The collection, same angle</div>
+      <a class="compare__item" href="totem.html">
+        <div class="img"><img src="assets/renders/totem-three-quarter.jpg" alt="Totem" loading="lazy"></div>
+        <div><span class="strong">Totem</span><span class="link">View →</span></div>
+      </a>
+      <a class="compare__item" href="shard.html">
+        <div class="img"><img src="assets/renders/shard-three-quarter.jpg" alt="Shard" loading="lazy"></div>
+        <div><span class="strong">Shard</span><span class="link">View →</span></div>
+      </a>
+      <a class="compare__item" href="float.html">
+        <div class="img"><img src="assets/renders/float-three-quarter.jpg" alt="Float" loading="lazy"></div>
+        <div><span class="strong">Float</span><span class="muted">Current</span></div>
+      </a>
+  </section>
+</main>
+<footer class="footer grid" id="contact">
+  <div class="footer__rule"></div>
+  <span class="muted">© 2026 Grainline</span>
+  <span class="muted">Sculptural furniture</span>
+  <a href="#">Instagram</a>
+  <a href="#">Contact</a>
+</footer>
+<script src="js/menu.js?v=13" defer></script>
+<script src="js/viewer.js?v=13" defer></script>
+<script src="js/construction.js?v=13" defer></script>
+</body>
+</html>
