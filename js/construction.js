@@ -7,6 +7,8 @@
   const tile = section.querySelector(".construction__tile");
   const exploded = tile.querySelector(".exploded");
   const assembled = tile.querySelector(".assembled");
+  // Totem ends on its own parts (the studio render hides the back leg)
+  const partsFinal = section.hasAttribute("data-parts-final");
   const pieces = [...tile.querySelectorAll(".piece")].map(el => ({ el, dx: +el.dataset.dx, dy: +el.dataset.dy, sx: +el.dataset.sx || 1, sy: +el.dataset.sy || 1, out: !!el.dataset.out, m: el.dataset.m ? el.dataset.m.split(",").map(Number) : null }));
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -36,7 +38,7 @@
         }
         q.el.style.transform = `translate(${(q.dx / 100 * w * t).toFixed(2)}px, ${(q.dy / 100 * h * t).toFixed(2)}px) scale(${(1 + (q.sx - 1) * t).toFixed(4)}, ${(1 + (q.sy - 1) * t).toFixed(4)})`;
       });
-      assembled.style.opacity = ease((p - 0.5) / 0.1).toFixed(3);
+      if (!partsFinal) assembled.style.opacity = ease((p - 0.5) / 0.1).toFixed(3);
     }
     requestAnimationFrame(tick);
   }
